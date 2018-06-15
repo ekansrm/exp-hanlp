@@ -2,12 +2,9 @@ package app;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.hankcs.hanlp.HanLP;
 import com.hankcs.hanlp.corpus.dependency.CoNll.CoNLLSentence;
 import com.hankcs.hanlp.corpus.dependency.CoNll.CoNLLWord;
 import com.hankcs.hanlp.dependency.nnparser.NeuralNetworkDependencyParser;
-import com.hankcs.hanlp.utility.Predefine;
-import javafx.util.Pair;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentLinkedQueue;
