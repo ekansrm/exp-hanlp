@@ -66,15 +66,6 @@ public class CorpusContentExtraction {
 
   }
 
-
-  static Pattern excapePattern = compile("[\uE40C]+");
-  static public String excape(String line) {
-    Matcher matcher = excapePattern.matcher(line);
-    String result = matcher.replaceAll("。");
-    return result;
-  }
-
-//  static Pattern headPattern = compile("((^.*?\\(记者.*?\\))|(^.*?日(电|消息)|(^.*?讯))|(^.*?日)|(^中新网.*?月[0-9]+)|((中国网|台海网|中国台湾网|中广网北京.*?)[0-9]+月[0-9]+日)|(^【.*?】))");
   static Pattern headPattern = compile(
   "(^.*?\\(记者.*?\\))\\s*" +
 //  "|(^.*?日(电|消息)|(^.*?讯))" +
