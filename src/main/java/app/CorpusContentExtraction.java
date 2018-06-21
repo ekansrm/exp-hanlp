@@ -9,6 +9,7 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.*;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -114,11 +115,17 @@ public class CorpusContentExtraction {
       }
     }
 
+  }
 
-
-
-
-
+  /**
+   * 将篇章断货断句.
+   * 去掉开头过短的句子
+   * 如果行数过少, 不输出. 需要大于5行
+   * @param content
+   * @return
+   */
+  static public List<String> splitParagraph(String content) {
+    return null;
   }
 
   static public void main(String[] args) throws ParserConfigurationException, IOException, SAXException {
