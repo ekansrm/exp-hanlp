@@ -3,6 +3,7 @@ package app;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
+import utils.AsciiUtil;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -66,16 +67,31 @@ public class CorpusContentExtraction {
   }
 
 
-  static Pattern excapePattern = compile("[\uE40C]");
+  static Pattern excapePattern = compile("[\uE40C]+");
   static public String excape(String line) {
     Matcher matcher = excapePattern.matcher(line);
-    String result = matcher.replaceAll(" ");
+    String result = matcher.replaceAll("。");
     return result;
   }
 
-  static Pattern headPattern = compile("^.*?（记者.*?）|日(电|消息)");
+//  static Pattern headPattern = compile("((^.*?\\(记者.*?\\))|(^.*?日(电|消息)|(^.*?讯))|(^.*?日)|(^中新网.*?月[0-9]+)|((中国网|台海网|中国台湾网|中广网北京.*?)[0-9]+月[0-9]+日)|(^【.*?】))");
+  static Pattern headPattern = compile(
+  "(^.*?\\(记者.*?\\))\\s*" +
+//  "|(^.*?日(电|消息)|(^.*?讯))" +
+//  "|(^.*?日)" +
+  "|^中新网[^0-9]*?[0-9]+月[0-9]+[日]?[电]?\\s*(\\(记者.*?\\))*" +
+  "|(^中新网[0-9]+月[0-9]+[日]?[电]?)" +
+  "|((中国网|台海网|中国台湾网|中广网北京.*?)[0-9]+月[0-9]+日)" +
+  "|(^【.*?】)"
+);
 
   static public String removeNoValue(String line) {
+    if (line.startsWith("中国雅虎侠客平台")) {
+      return null;
+    }
+    if (line.contains("并符合本论坛的主旨。")) {
+      return null;
+    }
     Matcher matcher = headPattern.matcher(line);
     return matcher.replaceAll("");
   }
@@ -94,16 +110,16 @@ public class CorpusContentExtraction {
       contentBuilder.append(line);
       if(pattern.matcher(line).find()) {
         Matcher matcher = contentPattern.matcher(contentBuilder.toString());
+        contentBuilder = new StringBuilder();
         if(matcher.find()) {
           String content = matcher.group(1);
-          content = excape(content);
+          content = AsciiUtil.sbc2dbcCase(content);
           content = removeNoValue(content);
-          if(content.length()==0) {
-//            continue;
+          if(content==null||content.length()==0) {
+            continue;
           }
           System.out.println(content);
         }
-        contentBuilder = new StringBuilder();
       }
     }
 
