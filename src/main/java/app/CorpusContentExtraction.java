@@ -9,6 +9,8 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.*;
+import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -110,7 +112,7 @@ public class CorpusContentExtraction {
           if(content==null||content.length()==0) {
             continue;
           }
-          System.out.println(content);
+          writeSentence(splitParagraph(content));
         }
       }
     }
@@ -118,13 +120,24 @@ public class CorpusContentExtraction {
   }
 
   /**
-   * 将篇章断货断句.
-   * 去掉开头过短的句子
-   * 如果行数过少, 不输出. 需要大于5行
+   * 将篇章断句.
    * @param content
    * @return
    */
+//  static private Pattern splitSentence = Pattern.compile("(?<=[.。!！…?？|'’＂”}｝\\]】\n\r])");
+  static private Pattern splitSentence = Pattern.compile("(?<=[.。!！…?？\n\r])");
   static public List<String> splitParagraph(String content) {
+    String[] sentetncs = splitSentence.split(content);
+    return new LinkedList<>(Arrays.asList(sentetncs));
+  }
+
+  static  public void writeSentence(List<String> sententce) {
+    System.out.println(String.join("\n", sententce));
+    System.out.println("================================================================================");
+
+  }
+
+  static public List<String> filterSentences(List<String> sentenc) {
     return null;
   }
 
