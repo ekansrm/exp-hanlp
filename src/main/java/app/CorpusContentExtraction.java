@@ -138,7 +138,7 @@ public class CorpusContentExtraction {
     return rv;
   }
 
-  static public void extractorSogouNewContentFast(FileInputStream in, FileOutputStream out) throws IOException {
+  static public void extractorSogouNewContentFast(FileInputStream in, ISentencesHandler handler) throws IOException {
 
     Pattern pattern = compile("(?<=</doc>)");
     Pattern contentPattern = compile("<content>(.*?)</content>");
@@ -162,18 +162,23 @@ public class CorpusContentExtraction {
           }
           List<String> sentences = punctuator.punctuate(content);
           sentences = filterSentences(sentences);
-          writeSentence(sentences);
+          handler.process(sentences);
         }
       }
     }
   }
 
-  static  public void writeSentence(List<String> sentence) {
-    if(null==sentence||0==sentence.size()) {
-      return;
+  static class SentencesHandlerPrint implements ISentencesHandler {
+
+    @Override
+    public void process(List<String> sentences) {
+      if(null==sentences||0==sentences.size()) {
+        return;
+      }
+      System.out.println(String.join("\n", sentences));
+      System.out.println();
+
     }
-    System.out.println(String.join("\n", sentence));
-    System.out.println();
 
   }
 
@@ -225,7 +230,7 @@ public class CorpusContentExtraction {
 
   static public void main(String[] args) throws ParserConfigurationException, IOException, SAXException {
     FileInputStream in = new FileInputStream("src/main/resources/news_tensite_xml.smarty.dat");
-    extractorSogouNewContentFast(in, null);
+    extractorSogouNewContentFast(in, new SentencesHandlerPrint());
 
   }
 
