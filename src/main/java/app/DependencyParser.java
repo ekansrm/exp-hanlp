@@ -55,9 +55,33 @@ public class DependencyParser {
         if(e==null||!wordTree.containsKey(e)) {
           continue;
         }
-        List<CoNLLWord> childrens = wordTree.get(e);
-        for(CoNLLWord child: childrens) {
+        List<CoNLLWord> children = wordTree.get(e);
+        for(CoNLLWord child: children) {
           rv.add(child.DEPREL);
+          rv.add(child.LEMMA);
+          rv.add(e.LEMMA);
+          traversalQueuePending.add(child);
+        }
+      }
+      traversalQueue.addAll(traversalQueuePending);
+    }
+    return rv;
+  }
+
+  static public Set<String> vocab(Map<CoNLLWord, List<CoNLLWord>> wordTree) {
+    Set<String> rv = new HashSet<>();
+    traversalQueue.clear();
+    traversalQueue.add(root);
+    while (!traversalQueue.isEmpty()) {
+
+      traversalQueuePending.clear();
+      while(!traversalQueue.isEmpty()) {
+        CoNLLWord e = traversalQueue.poll();
+        if(e==null||!wordTree.containsKey(e)) {
+          continue;
+        }
+        List<CoNLLWord> children = wordTree.get(e);
+        for(CoNLLWord child: children) {
           rv.add(child.LEMMA);
           rv.add(e.LEMMA);
           traversalQueuePending.add(child);
